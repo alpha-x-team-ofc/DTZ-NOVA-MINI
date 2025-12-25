@@ -17,7 +17,7 @@
     "pino": "^8.17.0",
     "cheerio": "^1.0.0-rc.12",
     "moment-timezone": "^0.5.43",
-    "jimp": "^0.22.10",
+    "jimp": "^0.16.1",
     "crypto": "^1.0.1",
     "yt-search": "^2.12.1",
     "node-fetch": "^2.6.1",
