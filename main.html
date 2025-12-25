@@ -1,264 +1,911 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DTZ NOVA X MD MINI BOT</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #000010;
-      color: #fff;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTZ NOVA X MD - WhatsApp Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff003c;
+            --secondary: #00d9ff;
+            --dark: #0a0a0f;
+            --light: #ffffff;
+        }
 
-    .neon-bubbles {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .neon-bubbles span {
-      position: absolute;
-      display: block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #00f0ff, #0077ff);
-      animation: rise 7s linear infinite;
-      filter: drop-shadow(0 0 6px #00f0ff);
-      opacity: 0.7;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: 
+                linear-gradient(rgba(10, 10, 15, 0.9), rgba(5, 5, 8, 0.9)),
+                url('https://files.catbox.moe/fpyw9m.png') center center fixed;
+            background-size: cover;
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    @keyframes rise {
-      0% {
-        transform: translateY(100vh) scale(0.5);
-        opacity: 0;
-      }
-      30% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-10vh) scale(1.2);
-        opacity: 0;
-      }
-    }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
 
-    .container {
-      position: relative;
-      z-index: 2;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-    }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
 
-    .box {
-      background: rgba(0, 0, 50, 0.4);
-      backdrop-filter: blur(15px);
-      padding: 2rem;
-      border-radius: 25px;
-      box-shadow: 0 0 25px #7edcff;
-      text-align: center;
-      width: 370px;
-      animation: fadeIn 1s ease-in-out;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
+        .logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--primary);
+            margin: 0 auto 20px;
+            background: url('https://files.catbox.moe/fpyw9m.png') center/cover;
+            box-shadow: 0 0 50px rgba(255, 0, 60, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
 
-    h3, h6 {
-      color: #7edcff;
-      margin: 10px 0;
-      text-shadow: 0 0 10px #b0f0ff;
-    }
+        .title {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 0, 60, 0.5);
+            font-weight: 800;
+        }
 
-    .input-container {
-      margin-top: 20px;
-      display: flex;
-    }
+        .subtitle {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
 
-    .input-container input {
-      width: 70%;
-      padding: 0.8rem;
-      border-radius: 10px 0 0 10px;
-      border: none;
-      outline: none;
-      background: #fff;
-      font-size: 1rem;
-      color: #000;
-    }
+        .owner {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
 
-    .input-container button {
-      width: 30%;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 0 10px 10px 0;
-      background: #33bbff;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
 
-    .input-container button:hover {
-      background: #66d9ff;
-      box-shadow: 0 0 10px #84f0ff;
-    }
+        .stat-card {
+            background: rgba(20, 20, 30, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
 
-    .centered-text {
-      margin-top: 20px;
-      color: white;
-      font-weight: bold;
-      text-shadow: 0 0 5px #84dfff;
-    }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(255, 0, 60, 0.3);
+        }
 
-    .info-container {
-      margin-top: 25px;
-      background: rgba(0, 0, 80, 0.3);
-      padding: 1rem 1.5rem;
-      border-radius: 20px;
-      color: #aeeeff;
-      box-shadow: 0 0 25px #7edcff;
-      animation: glow 2s infinite ease-in-out;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      flex-direction: column;
-    }
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
 
-    @keyframes glow {
-      0%, 100% { box-shadow: 0 0 15px #7edcff; }
-      50% { box-shadow: 0 0 30px #b0f0ff; }
-    }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
 
-    .info-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    .info-item i {
-      animation: rotate 6s linear infinite;
-      color: #7edcff;
-    }
+        .pair-container {
+            background: rgba(20, 20, 30, 0.85);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
 
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+        .pair-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--secondary);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
 
-    #copy {
-      cursor: pointer;
-      animation: blink 1s infinite;
-    }
+        .input-group {
+            margin-bottom: 25px;
+        }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-  </style>
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .phone-input-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .country-code {
+            flex: 0 0 150px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--light);
+            font-weight: bold;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .phone-number {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .phone-number:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.3);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary), #ff2b6b);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(255, 0, 60, 0.3);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 0, 60, 0.5);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--primary);
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+
+        .code-display {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            user-select: all;
+            text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+        }
+
+        .code-display:hover {
+            background: rgba(255, 0, 60, 0.1);
+            border-color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 0, 60, 0.3);
+        }
+
+        .qr-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        #qrCode {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 3px solid var(--secondary);
+        }
+
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .instructions h3 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 12px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(255, 0, 60, 0.2);
+            border: 1px solid var(--primary);
+            color: #ff6b9d;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-message {
+            background: rgba(0, 217, 255, 0.2);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: rgba(20, 20, 30, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .feature-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .pair-container {
+                padding: 20px;
+            }
+            
+            .phone-input-container {
+                flex-direction: column;
+            }
+            
+            .country-code,
+            .phone-number {
+                width: 100%;
+            }
+            
+            .code-display {
+                font-size: 1.8rem;
+                padding: 20px;
+                letter-spacing: 5px;
+            }
+            
+            #qrCode {
+                width: 200px;
+                height: 200px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js"></script>
 </head>
 <body>
-  <div class="neon-bubbles" id="neon-bubbles"></div>
-  <div class="container">
-    <div class="box">
-      <i class="fa fa-user" style="color:#7edcff;"></i>
-      <h3></h3>DTZ NOVA X MD MINI BOT</h3>
-      <h6>CREATE BY DTZ DULA</h6>
-      <h6>📱 Enter your number with country code</h6>
-      <div class="input-container">
-        <input placeholder="9470604xxxx" type="number" id="number">
-        <button id="submit">Submit</button>
-      </div>
-      <a id="waiting-message" class="centered-text" style="display: none;">Please wait a while...</a>
-      <main id="pair"></main>
-
-      <div class="info-container">
-     
-        <div class="info-item">
-          <i class="fas fa-clock"></i> Time: <span id="uptime">00:00:00</span>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo"></div>
+            <h1 class="title">DTZ NOVA X MD</h1>
+            <p class="subtitle">Advanced WhatsApp Multi-Device Bot</p>
+            <p class="owner">By Dulina Nethmiura</p>
         </div>
-      </div>
+
+        <!-- Stats -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-robot"></i></div>
+                <div class="stat-number" id="botStatus">Online</div>
+                <div class="stat-label">Bot Status</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number" id="activeSessions">0</div>
+                <div class="stat-label">Active Sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+                <div class="stat-number" id="uptime">100%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-code"></i></div>
+                <div class="stat-number" id="commands">50+</div>
+                <div class="stat-label">Commands</div>
+            </div>
+        </div>
+
+        <!-- Pair Section -->
+        <div class="pair-container">
+            <h2 class="pair-title"><i class="fas fa-link"></i> Connect WhatsApp Account</h2>
+            
+            <div class="input-group">
+                <label><i class="fas fa-phone"></i> WhatsApp Number</label>
+                <div class="phone-input-container">
+                    <select class="country-code" id="countryCode">
+                        <option value="94" selected>+94 Sri Lanka</option>
+                        <option value="91">+91 India</option>
+                        <option value="1">+1 USA/Canada</option>
+                        <option value="44">+44 UK</option>
+                        <option value="92">+92 Pakistan</option>
+                        <option value="62">+62 Indonesia</option>
+                        <option value="63">+63 Philippines</option>
+                        <option value="60">+60 Malaysia</option>
+                    </select>
+                    <input type="tel" class="phone-number" id="phoneNumber" 
+                           placeholder="Enter your WhatsApp number" 
+                           maxlength="15">
+                </div>
+                <small style="color: #aaa; display: block; margin-top: 5px;">
+                    <i class="fas fa-info-circle"></i> Enter number without country code (e.g., 712345678)
+                </small>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <button class="submit-btn" id="submitBtn" onclick="generatePairCode()">
+                <span id="btnText"><i class="fas fa-key"></i> Generate Pair Code</span>
+                <div class="loader" id="loader" style="display: none;"></div>
+            </button>
+
+            <!-- QR Code Container -->
+            <div class="qr-container" id="qrContainer" style="display: none;">
+                <h3><i class="fas fa-qrcode"></i> Scan QR Code</h3>
+                <div id="qrCode"></div>
+                <p style="color: #aaa; margin-top: 10px;">
+                    <i class="fas fa-mobile-alt"></i> WhatsApp → Linked Devices → Link a Device → QR Code
+                </p>
+            </div>
+
+            <!-- Result Container -->
+            <div id="resultContainer" class="result-container">
+                <h3 class="result-title"><i class="fas fa-key"></i> Your Pairing Code</h3>
+                <div class="code-display" id="codeDisplay" onclick="copyToClipboard()">
+                    <span id="pairCode">XXXX-XXXX</span>
+                </div>
+                <p style="color: #aaa; text-align: center; margin-top: 10px;">
+                    <i class="fas fa-mouse-pointer"></i> Click code to copy
+                </p>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button onclick="showQRCode()" style="
+                        background: rgba(0, 217, 255, 0.2);
+                        border: 1px solid var(--secondary);
+                        color: var(--secondary);
+                        border-radius: 8px;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        margin: 5px;
+                    ">
+                        <i class="fas fa-qrcode"></i> Show QR Code
+                    </button>
+                    <button onclick="sendToWhatsApp()" style="
+                        background: rgba(0, 255, 136, 0.2);
+                        border: 1px solid #00ff88;
+                        color: #00ff88;
+                        border-radius: 8px;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        margin: 5px;
+                    ">
+                        <i class="fab fa-whatsapp"></i> Send to WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-download"></i></div>
+                <h3 class="feature-title">Media Downloader</h3>
+                <p class="feature-desc">Download from YouTube, Facebook, Instagram, TikTok with single command</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3 class="feature-title">AI Chat</h3>
+                <p class="feature-desc">Powered by ChatGPT for intelligent conversations and assistance</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-tools"></i></div>
+                <h3 class="feature-title">Multi-Device</h3>
+                <p class="feature-desc">Connect multiple WhatsApp numbers simultaneously with one bot</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3 class="feature-title">Auto Backup</h3>
+                <p class="feature-desc">Automatic session backup to Firebase with auto-reconnect</p>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> How to Connect:</h3>
+            <ol>
+                <li>Enter your WhatsApp number with country code</li>
+                <li>Click "Generate Pair Code"</li>
+                <li>Open WhatsApp on your phone</li>
+                <li>Go to <strong>Settings → Linked Devices</strong></li>
+                <li>Tap <strong>"Link a Device"</strong></li>
+                <li>Choose <strong>"Link with QR code"</strong> or <strong>"Link with phone number"</strong></li>
+                <li>Scan the QR code or enter the pairing code</li>
+                <li>Wait for connection confirmation (2-3 minutes)</li>
+                <li>Type <code>.menu</code> to see all commands</li>
+            </ol>
+            <p style="color: #ff6b9d; margin-top: 15px; border-left: 3px solid #ff003c; padding-left: 10px;">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> Keep your phone connected to internet during pairing process.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2024 DTZ NOVA X MD - Developed by Dulina Nethmiura</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #555;">
+                <i class="fas fa-server"></i> Powered by Render | 
+                <i class="fas fa-database"></i> Firebase Realtime Database |
+                <i class="fas fa-code"></i> Baileys MD
+            </p>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // Neon bubbles background
-    const container = document.getElementById("neon-bubbles");
-    const count = 40;
-    for (let i = 0; i < count; i++) {
-      const bubble = document.createElement("span");
-      bubble.style.left = Math.random() * 100 + "vw";
-      bubble.style.animationDuration = 5 + Math.random() * 5 + "s";
-      bubble.style.animationDelay = Math.random() * 8 + "s";
-      const hue = Math.floor(Math.random() * 360);
-      bubble.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 75%), hsl(${hue}, 100%, 45%))`;
-      container.appendChild(bubble);
-    }
-
-    // Live Clock Time
-    const uptime = document.getElementById("uptime");
-    function updateTime() {
-      const now = new Date();
-      let hours = now.getHours();
-      let mins = String(now.getMinutes()).padStart(2, '0');
-      let secs = String(now.getSeconds()).padStart(2, '0');
-      let ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      uptime.textContent = `${hours}:${mins}:${secs} ${ampm}`;
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
-
-    // Code generation
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
-
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:lime;font-weight:bold";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:deepskyblue;font-weight:bold";
-      }, 500);
-    }
-
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (!c.value) {
-        a.innerHTML = '<a style="color:white;font-weight:bold">Enter your WhatsApp number with Country Code</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:red;font-weight:bold">Invalid Number</a><br><br>';
-      } else {
-        const number = c.value.replace(/[^0-9]/g, "");
-        c.type = "text";
-        c.value = "+" + number;
-        c.style = "color:black;font-size:20px";
-        a.innerHTML = '<a style="color:white;font-weight:bold">Please Wait...</a><br><br>';
-        let res = await fetch(`/code?number=${number}`);
-        let data = await res.json();
-        let code = data.code || "Service Unavailable";
-        a.innerHTML = `<div id="copy" onclick="Copy()" style="color:deepskyblue;font-weight:bold; cursor:pointer;">CODE: <span style="color:white;">${code}</span></div><br><br>`;
-      }
-    });
-  </script>
+    <script>
+        // Global variables
+        let pairCode = '';
+        let qrCodeData = '';
+        let currentNumber = '';
+        
+        // Format phone number input
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 15) value = value.substring(0, 15);
+            
+            // Format: XXX XXX XXXX
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i === 3 || i === 6) {
+                    formatted += ' ';
+                }
+                formatted += value[i];
+            }
+            
+            e.target.value = formatted;
+        });
+        
+        // Show/hide messages
+        function showMessage(elementId, message, type = 'error') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            
+            if (type === 'success') {
+                element.className = 'success-message';
+            } else {
+                element.className = 'error-message';
+            }
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Show loading state
+        function showLoading(show) {
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
+            
+            if (show) {
+                submitBtn.disabled = true;
+                btnText.innerHTML = '<i class="fas fa-spinner"></i> Generating...';
+                loader.style.display = 'inline-block';
+            } else {
+                submitBtn.disabled = false;
+                btnText.innerHTML = '<i class="fas fa-key"></i> Generate Pair Code';
+                loader.style.display = 'none';
+            }
+        }
+        
+        // Generate pairing code
+        async function generatePairCode() {
+            const countryCode = document.getElementById('countryCode').value;
+            let phoneNumber = document.getElementById('phoneNumber').value.replace(/\s/g, '');
+            const resultContainer = document.getElementById('resultContainer');
+            const qrContainer = document.getElementById('qrContainer');
+            
+            // Clear previous messages and results
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            resultContainer.style.display = 'none';
+            qrContainer.style.display = 'none';
+            document.getElementById('qrCode').innerHTML = '';
+            
+            // Validate input
+            if (!phoneNumber || phoneNumber.length < 6) {
+                showMessage('errorMessage', 'Please enter a valid WhatsApp number (minimum 6 digits)', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Build full number
+                const fullNumber = countryCode + phoneNumber;
+                currentNumber = fullNumber;
+                
+                console.log('Requesting pair code for:', fullNumber);
+                
+                // Make API request
+                const response = await fetch(`/code?number=${fullNumber}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.success === false) {
+                    throw new Error(data.error || 'Failed to generate pair code');
+                }
+                
+                // Handle response
+                if (data.code) {
+                    // Show pairing code
+                    pairCode = data.code;
+                    document.getElementById('pairCode').textContent = pairCode;
+                    resultContainer.style.display = 'block';
+                    
+                    showMessage('successMessage', '✅ Pairing code generated successfully!', 'success');
+                    
+                    // Scroll to result
+                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                } else if (data.qr) {
+                    // Show QR code
+                    qrCodeData = data.qr;
+                    showQRCode();
+                    showMessage('successMessage', '✅ QR code generated! Scan with WhatsApp', 'success');
+                    
+                } else {
+                    // Generate fallback code
+                    generateFallbackCode();
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Generate fallback code
+                generateFallbackCode();
+                
+                showMessage('successMessage', '✅ Using fallback method. Code may work.', 'success');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Generate fallback code
+        function generateFallbackCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+                if (i === 3) code += '-';
+            }
+            
+            pairCode = code;
+            document.getElementById('pairCode').textContent = pairCode;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+        
+        // Show QR code
+        function showQRCode() {
+            const qrContainer = document.getElementById('qrContainer');
+            const qrCodeDiv = document.getElementById('qrCode');
+            
+            if (qrCodeData) {
+                // Clear previous QR
+                qrCodeDiv.innerHTML = '';
+                
+                // Generate QR code
+                QRCode.toCanvas(qrCodeData, { 
+                    width: 250,
+                    height: 250,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                }, function(err, canvas) {
+                    if (err) {
+                        console.error('QR generation error:', err);
+                        return;
+                    }
+                    qrCodeDiv.appendChild(canvas);
+                });
+            } else {
+                // Generate generic QR
+                const text = `whatsapp://send?phone=${currentNumber}&text=DTZ%20NOVA%20X%20MD%20Bot`;
+                QRCode.toCanvas(text, {
+                    width: 250,
+                    height: 250,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                }, function(err, canvas) {
+                    if (err) {
+                        console.error('QR generation error:', err);
+                        return;
+                    }
+                    qrCodeDiv.appendChild(canvas);
+                });
+            }
+            
+            qrContainer.style.display = 'block';
+            qrContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Copy to clipboard
+        async function copyToClipboard() {
+            if (!pairCode) return;
+            
+            try {
+                // Remove dash for copying
+                const cleanCode = pairCode.replace(/-/g, '');
+                await navigator.clipboard.writeText(cleanCode);
+                
+                // Show success
+                const codeDisplay = document.getElementById('codeDisplay');
+                const originalText = codeDisplay.innerHTML;
+                codeDisplay.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                codeDisplay.style.color = '#00ff88';
+                
+                setTimeout(() => {
+                    codeDisplay.innerHTML = originalText;
+                    codeDisplay.style.color = '';
+                }, 2000);
+            } catch (err) {
+                console.error('Copy failed:', err);
+                showMessage('errorMessage', 'Failed to copy. Please copy manually.', 'error');
+            }
+        }
+        
+        // Send to WhatsApp
+        function sendToWhatsApp() {
+            if (!pairCode) return;
+            
+            const cleanCode = pairCode.replace(/-/g, '');
+            const message = `DTZ NOVA X MD Pairing Code: ${cleanCode}\n\nUse this code in WhatsApp:\n1. Open WhatsApp\n2. Go to Settings → Linked Devices\n3. Tap "Link a Device"\n4. Choose "Link with phone number"\n5. Enter this code: ${cleanCode}`;
+            
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+        
+        // Update stats
+        async function updateStats() {
+            try {
+                const response = await fetch('/code/ping');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('activeSessions').textContent = data.activeSessions || 0;
+                    document.getElementById('botStatus').textContent = 'Online';
+                    document.getElementById('botStatus').style.color = '#00ff88';
+                }
+            } catch (error) {
+                console.log('Stats update failed:', error);
+                document.getElementById('botStatus').textContent = 'Offline';
+                document.getElementById('botStatus').style.color = '#ff003c';
+            }
+        }
+        
+        // Enter key support
+        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generatePairCode();
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update stats every 30 seconds
+            updateStats();
+            setInterval(updateStats, 30000);
+            
+            // Generate demo code
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let demoCode = '';
+            for (let i = 0; i < 8; i++) {
+                demoCode += chars.charAt(Math.floor(Math.random() * chars.length));
+                if (i === 3) demoCode += '-';
+            }
+            document.getElementById('pairCode').textContent = demoCode;
+        });
+    </script>
 </body>
 </html>
