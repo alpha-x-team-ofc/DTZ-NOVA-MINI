@@ -5,26 +5,17 @@ const bodyParser = require("body-parser");
 const fs = require('fs');
 const PORT = process.env.PORT || 8000;
 
-// Set global path
 global.__path = process.cwd();
 
-// Increase event listeners
 require('events').EventEmitter.defaultMaxListeners = 500;
 
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Serve static files
 app.use(express.static(__path));
 
-// Import routes
 const pairRoute = require('./pair');
-
-// Routes
 app.use('/code', pairRoute);
 
-// Serve HTML pages
 app.use('/pair', (req, res) => {
     res.sendFile(path.join(__path, 'pair.html'));
 });
@@ -33,9 +24,7 @@ app.use('/', (req, res) => {
     res.sendFile(path.join(__path, 'main.html'));
 });
 
-// API endpoint for checking active sessions
 app.get('/api/active', (req, res) => {
-    // This will be handled by the pair.js route
     const pair = require('./pair');
     const activeRoute = pair.stack.find(layer => layer.route && layer.route.path === '/active');
     if (activeRoute) {
@@ -44,7 +33,6 @@ app.get('/api/active', (req, res) => {
     res.json({ count: 0, numbers: [] });
 });
 
-// API endpoint for ping
 app.get('/api/ping', (req, res) => {
     res.json({
         status: 'active',
@@ -53,18 +41,15 @@ app.get('/api/ping', (req, res) => {
     });
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Server Error:', err);
     res.status(500).json({ error: 'Internal Server Error', message: err.message });
 });
 
-// 404 handler
 app.use((req, res) => {
     res.status(404).sendFile(path.join(__path, 'main.html'));
 });
 
-// Create required directories
 const directories = ['./session', './temp'];
 directories.forEach(dir => {
     if (!fs.existsSync(dir)) {
@@ -73,7 +58,6 @@ directories.forEach(dir => {
     }
 });
 
-// Check for required files
 const requiredFiles = ['./admin.json', './numbers.json'];
 requiredFiles.forEach(file => {
     if (!fs.existsSync(file)) {
@@ -86,7 +70,6 @@ requiredFiles.forEach(file => {
     }
 });
 
-// Start server
 const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`
 ╔══════════════════════════════════════════════╗
@@ -110,7 +93,6 @@ const server = app.listen(PORT, '0.0.0.0', () => {
     `);
 });
 
-// Handle graceful shutdown
 process.on('SIGINT', () => {
     console.log('\nShutting down server gracefully...');
     server.close(() => {
@@ -127,10 +109,8 @@ process.on('SIGTERM', () => {
     });
 });
 
-// Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
-    // Don't exit, let the server continue running
 });
 
 process.on('unhandledRejection', (reason, promise) => {
