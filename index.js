@@ -1,5 +1,3 @@
-[file name]: index.js
-[file content begin]
 const express = require('express');
 const app = express();
 const path = require('path');
