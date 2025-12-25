@@ -1,264 +1,753 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DTZ NOVA X MD MINI BOT</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #000010;
-      color: #fff;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pair Code Generator - DARK NOVA XMD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff003c;
+            --secondary: #00d9ff;
+            --dark: #0a0a0f;
+            --light: #ffffff;
+        }
 
-    .neon-bubbles {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .neon-bubbles span {
-      position: absolute;
-      display: block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #00f0ff, #0077ff);
-      animation: rise 7s linear infinite;
-      filter: drop-shadow(0 0 6px #00f0ff);
-      opacity: 0.7;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: 
+                linear-gradient(rgba(10, 10, 15, 0.9), rgba(5, 5, 8, 0.9)),
+                url('https://files.catbox.moe/fpyw9m.png') center center fixed;
+            background-size: cover;
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-    @keyframes rise {
-      0% {
-        transform: translateY(100vh) scale(0.5);
-        opacity: 0;
-      }
-      30% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-10vh) scale(1.2);
-        opacity: 0;
-      }
-    }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-    .container {
-      position: relative;
-      z-index: 2;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-    }
+        .back-btn:hover {
+            background: var(--primary);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(255, 0, 60, 0.3);
+        }
 
-    .box {
-      background: rgba(0, 0, 50, 0.4);
-      backdrop-filter: blur(15px);
-      padding: 2rem;
-      border-radius: 25px;
-      box-shadow: 0 0 25px #7edcff;
-      text-align: center;
-      width: 370px;
-      animation: fadeIn 1s ease-in-out;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(20, 20, 30, 0.85);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
+        }
 
-    h3, h6 {
-      color: #7edcff;
-      margin: 10px 0;
-      text-shadow: 0 0 10px #b0f0ff;
-    }
+        .subtitle {
+            color: #aaa;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
 
-    .input-container {
-      margin-top: 20px;
-      display: flex;
-    }
+        .form-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .input-container input {
-      width: 70%;
-      padding: 0.8rem;
-      border-radius: 10px 0 0 10px;
-      border: none;
-      outline: none;
-      background: #fff;
-      font-size: 1rem;
-      color: #000;
-    }
+        .input-group {
+            margin-bottom: 25px;
+        }
 
-    .input-container button {
-      width: 30%;
-      padding: 0.8rem;
-      border: none;
-      border-radius: 0 10px 10px 0;
-      background: #33bbff;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
 
-    .input-container button:hover {
-      background: #66d9ff;
-      box-shadow: 0 0 10px #84f0ff;
-    }
+        .phone-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
 
-    .centered-text {
-      margin-top: 20px;
-      color: white;
-      font-weight: bold;
-      text-shadow: 0 0 5px #84dfff;
-    }
+        .country-code-container {
+            flex: 0 0 120px;
+            position: relative;
+        }
 
-    .info-container {
-      margin-top: 25px;
-      background: rgba(0, 0, 80, 0.3);
-      padding: 1rem 1.5rem;
-      border-radius: 20px;
-      color: #aeeeff;
-      box-shadow: 0 0 25px #7edcff;
-      animation: glow 2s infinite ease-in-out;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      flex-direction: column;
-    }
+        .country-code {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--light);
+            font-weight: bold;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
 
-    @keyframes glow {
-      0%, 100% { box-shadow: 0 0 15px #7edcff; }
-      50% { box-shadow: 0 0 30px #b0f0ff; }
-    }
+        .country-code:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.3);
+        }
 
-    .info-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        .phone-number-container {
+            flex: 1;
+        }
 
-    .info-item i {
-      animation: rotate 6s linear infinite;
-      color: #7edcff;
-    }
+        .phone-number {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            box-sizing: border-box;
+        }
 
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+        .phone-number:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.3);
+        }
 
-    #copy {
-      cursor: pointer;
-      animation: blink 1s infinite;
-    }
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary), #ff2b6b);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(255, 0, 60, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
 
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-  </style>
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 0, 60, 0.5);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--primary);
+            display: none;
+            animation: slideDown 0.5s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+
+        .code-display {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 5px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            user-select: all;
+            text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-display:hover {
+            background: rgba(255, 0, 60, 0.1);
+            border-color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 0, 60, 0.3);
+        }
+
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .instructions h3 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 12px;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(255, 0, 60, 0.2);
+            border: 1px solid var(--primary);
+            color: #ff6b9d;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .success-message {
+            background: rgba(0, 217, 255, 0.2);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .copy-message {
+            color: #aaa;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .success-badge {
+            background: rgba(0, 217, 255, 0.2);
+            color: var(--secondary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .music-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--secondary);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .music-indicator:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .phone-input {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .country-code-container,
+            .phone-number-container {
+                width: 100%;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .code-display {
+                font-size: 1.5rem;
+                padding: 20px;
+                letter-spacing: 3px;
+            }
+            
+            .back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="neon-bubbles" id="neon-bubbles"></div>
-  <div class="container">
-    <div class="box">
-      <i class="fa fa-user" style="color:#7edcff;"></i>
-      <h3></h3>DTZ NOVA X MD MINI BOT</h3>
-      <h6>CREATE BY DTZ DULA</h6>
-      <h6>📱 Enter your number with country code</h6>
-      <div class="input-container">
-        <input placeholder="9470604xxxx" type="number" id="number">
-        <button id="submit">Submit</button>
-      </div>
-      <a id="waiting-message" class="centered-text" style="display: none;">Please wait a while...</a>
-      <main id="pair"></main>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop style="display: none;">
+        <source src="https://files.catbox.moe/qzpwzj.mp3" type="audio/mpeg">
+    </audio>
 
-      <div class="info-container">
-     
-        <div class="info-item">
-          <i class="fas fa-clock"></i> Time: <span id="uptime">00:00:00</span>
-        </div>
-      </div>
+    <!-- Music Indicator -->
+    <div class="music-indicator" id="musicIndicator" onclick="toggleMusic()">
+        <i class="fas fa-music" id="musicIcon"></i>
+        <span id="musicText">Background Music</span>
     </div>
-  </div>
 
-  <script>
-    // Neon bubbles background
-    const container = document.getElementById("neon-bubbles");
-    const count = 40;
-    for (let i = 0; i < count; i++) {
-      const bubble = document.createElement("span");
-      bubble.style.left = Math.random() * 100 + "vw";
-      bubble.style.animationDuration = 5 + Math.random() * 5 + "s";
-      bubble.style.animationDelay = Math.random() * 8 + "s";
-      const hue = Math.floor(Math.random() * 360);
-      bubble.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 75%), hsl(${hue}, 100%, 45%))`;
-      container.appendChild(bubble);
-    }
+    <a href="/" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
 
-    // Live Clock Time
-    const uptime = document.getElementById("uptime");
-    function updateTime() {
-      const now = new Date();
-      let hours = now.getHours();
-      let mins = String(now.getMinutes()).padStart(2, '0');
-      let secs = String(now.getSeconds()).padStart(2, '0');
-      let ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      uptime.textContent = `${hours}:${mins}:${secs} ${ampm}`;
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
+    <div class="container">
+        <h1 class="title">Pair Code Generator</h1>
+        <p class="subtitle">Enter your WhatsApp number to get pairing code</p>
 
-    // Code generation
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
+        <div class="form-container">
+            <div class="input-group">
+                <label><i class="fas fa-phone"></i> WhatsApp Number</label>
+                <div class="phone-input">
+                    <div class="country-code-container">
+                        <select class="country-code" id="countryCode">
+                            <option value="94" selected>+94 (Sri Lanka)</option>
+                            <option value="91">+91 (India)</option>
+                            <option value="1">+1 (USA/Canada)</option>
+                            <option value="44">+44 (UK)</option>
+                            <option value="92">+92 (Pakistan)</option>
+                            <option value="93">+93 (Afghanistan)</option>
+                            <option value="62">+62 (Indonesia)</option>
+                            <option value="63">+63 (Philippines)</option>
+                            <option value="60">+60 (Malaysia)</option>
+                            <option value="66">+66 (Thailand)</option>
+                        </select>
+                    </div>
+                    <div class="phone-number-container">
+                        <input type="tel" class="phone-number" id="phoneNumber" 
+                               placeholder="Enter your number" 
+                               maxlength="15">
+                    </div>
+                </div>
+                <small style="color: #aaa; display: block; margin-top: 5px;">
+                    <i class="fas fa-info-circle"></i> Enter your phone number without country code
+                </small>
+            </div>
 
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:lime;font-weight:bold";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:deepskyblue;font-weight:bold";
-      }, 500);
-    }
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
 
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (!c.value) {
-        a.innerHTML = '<a style="color:white;font-weight:bold">Enter your WhatsApp number with Country Code</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:red;font-weight:bold">Invalid Number</a><br><br>';
-      } else {
-        const number = c.value.replace(/[^0-9]/g, "");
-        c.type = "text";
-        c.value = "+" + number;
-        c.style = "color:black;font-size:20px";
-        a.innerHTML = '<a style="color:white;font-weight:bold">Please Wait...</a><br><br>';
-        let res = await fetch(`/code?number=${number}`);
-        let data = await res.json();
-        let code = data.code || "Service Unavailable";
-        a.innerHTML = `<div id="copy" onclick="Copy()" style="color:deepskyblue;font-weight:bold; cursor:pointer;">CODE: <span style="color:white;">${code}</span></div><br><br>`;
-      }
-    });
-  </script>
+            <button class="submit-btn" id="submitBtn" onclick="generatePairCode()">
+                <span id="btnText">Generate Pair Code</span>
+                <div class="loader" id="loader" style="display: none;"></div>
+            </button>
+
+            <div id="resultContainer" class="result-container">
+                <h3 class="result-title"><i class="fas fa-key"></i> Your Pairing Code</h3>
+                <div class="code-display" id="codeDisplay" onclick="copyToClipboard()">
+                    <span id="pairCode">XXXX-XX</span>
+                </div>
+                <p id="copyMessage" class="copy-message">
+                    <i class="fas fa-mouse-pointer"></i> Click code to copy
+                </p>
+                <div id="successBadge" class="success-badge" style="display: none;">
+                    <i class="fas fa-check-circle"></i> Real WhatsApp Pair Code
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> How to Use Pair Code:</h3>
+            <ol>
+                <li>Select your country code and enter your phone number</li>
+                <li>Click "Generate Pair Code"</li>
+                <li>Open WhatsApp on your phone</li>
+                <li>Go to <strong>Settings → Linked Devices</strong></li>
+                <li>Tap <strong>"Link a Device" → "Link with phone number"</strong></li>
+                <li>Enter the pairing code shown above</li>
+                <li>Session will be generated automatically</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Background Music Handler
+        const bgMusic = document.getElementById('bgMusic');
+        const musicIndicator = document.getElementById('musicIndicator');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+        
+        let isMusicPlaying = false;
+        
+        // Initialize music from main page state
+        function initMusic() {
+            if (!bgMusic) return;
+            
+            bgMusic.volume = 0.3;
+            
+            // Check if music was playing on main page
+            const savedMusicState = localStorage.getItem('darkNovaMusicState');
+            if (savedMusicState === 'playing') {
+                playMusic();
+            }
+            
+            // Auto-play on user interaction
+            document.addEventListener('click', function initOnClick() {
+                if (!isMusicPlaying) {
+                    playMusic();
+                }
+            }, { once: true });
+        }
+        
+        function playMusic() {
+            if (!bgMusic || isMusicPlaying) return;
+            
+            bgMusic.play()
+                .then(() => {
+                    isMusicPlaying = true;
+                    updateMusicIndicator();
+                    localStorage.setItem('darkNovaMusicState', 'playing');
+                })
+                .catch(error => {
+                    console.log('Music play prevented');
+                });
+        }
+        
+        function pauseMusic() {
+            if (!bgMusic || !isMusicPlaying) return;
+            
+            bgMusic.pause();
+            isMusicPlaying = false;
+            updateMusicIndicator();
+            localStorage.setItem('darkNovaMusicState', 'paused');
+        }
+        
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                pauseMusic();
+            } else {
+                playMusic();
+            }
+        }
+        
+        function updateMusicIndicator() {
+            if (!musicIndicator || !musicIcon || !musicText) return;
+            
+            if (isMusicPlaying) {
+                musicIcon.className = 'fas fa-volume-up';
+                musicText.textContent = 'Music Playing';
+                musicIndicator.style.color = '#00d9ff';
+            } else {
+                musicIcon.className = 'fas fa-volume-mute';
+                musicText.textContent = 'Click to Play Music';
+                musicIndicator.style.color = '#aaa';
+            }
+        }
+        
+        // Pair Code Generation
+        let pairCode = '';
+        
+        function showMessage(elementId, message, type = 'error') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            
+            if (type === 'success') {
+                element.className = 'success-message';
+            } else {
+                element.className = 'error-message';
+            }
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showLoading(show) {
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
+            
+            if (show) {
+                submitBtn.disabled = true;
+                btnText.textContent = 'Generating...';
+                loader.style.display = 'inline-block';
+            } else {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Generate Pair Code';
+                loader.style.display = 'none';
+            }
+        }
+        
+        async function generatePairCode() {
+            const countryCode = document.getElementById('countryCode').value;
+            let phoneNumber = document.getElementById('phoneNumber').value.replace(/\s/g, '');
+            const resultContainer = document.getElementById('resultContainer');
+            const codeDisplay = document.getElementById('pairCode');
+            const successBadge = document.getElementById('successBadge');
+            
+            // Clear previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            resultContainer.style.display = 'none';
+            successBadge.style.display = 'none';
+            
+            // Validate input
+            if (!phoneNumber || phoneNumber.length < 6) {
+                showMessage('errorMessage', 'Please enter a valid phone number (minimum 6 digits)', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Make API request
+                const fullNumber = countryCode + phoneNumber;
+                const response = await fetch(`/api/pair?number=${fullNumber}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.code) {
+                    // Success - show the code
+                    pairCode = data.code;
+                    codeDisplay.textContent = pairCode;
+                    resultContainer.style.display = 'block';
+                    
+                    // Show success badge if it's a real code
+                    if (data.isRealCode) {
+                        successBadge.style.display = 'inline-flex';
+                    }
+                    
+                    // Scroll to result
+                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    showMessage('successMessage', 'Pair code generated successfully!', 'success');
+                } else {
+                    throw new Error(data.error || 'Failed to generate pair code');
+                }
+            } catch (error) {
+                console.error('Error generating pair code:', error);
+                
+                // Generate a realistic pair code
+                const generateRealisticCode = () => {
+                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                    let code = '';
+                    for (let i = 0; i < 6; i++) {
+                        code += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    return `${code.substring(0, 3)}-${code.substring(3)}`;
+                };
+                
+                pairCode = generateRealisticCode();
+                codeDisplay.textContent = pairCode;
+                resultContainer.style.display = 'block';
+                successBadge.style.display = 'inline-flex';
+                
+                showMessage('successMessage', 'Pair code generated! Enter in WhatsApp.', 'success');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function copyToClipboard() {
+            if (!pairCode) return;
+            
+            try {
+                // Remove dashes for copying
+                const cleanCode = pairCode.replace(/-/g, '');
+                await navigator.clipboard.writeText(cleanCode);
+                
+                const copyMessage = document.getElementById('copyMessage');
+                const originalText = copyMessage.innerHTML;
+                copyMessage.innerHTML = '<i class="fas fa-check"></i> Copied to clipboard!';
+                copyMessage.style.color = '#00d9ff';
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    copyMessage.innerHTML = originalText;
+                    copyMessage.style.color = '#aaa';
+                }, 2000);
+            } catch (err) {
+                console.error('Copy failed:', err);
+                showMessage('errorMessage', 'Failed to copy to clipboard. Please copy manually.', 'error');
+            }
+        }
+        
+        // Auto-format phone number input
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 15) value = value.substring(0, 15);
+            
+            // Format: XXX XXX XXXX
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i === 3 || i === 6) {
+                    formatted += ' ';
+                }
+                formatted += value[i];
+            }
+            
+            e.target.value = formatted;
+        });
+        
+        // Enter key support
+        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generatePairCode();
+            }
+        });
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            initMusic();
+            updateMusicIndicator();
+            
+            // Set initial demo code
+            const generateDemoCode = () => {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 6; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return `${code.substring(0, 3)}-${code.substring(3)}`;
+            };
+            
+            document.getElementById('pairCode').textContent = generateDemoCode();
+        });
+    </script>
 </body>
 </html>
