@@ -2,158 +2,99 @@ const {
     proto,
     downloadContentFromMessage,
     getContentType
-} = require('baileys');
-const fs = require('fs');
-const path = require('path');
+} = require('baileys')
+const fs = require('fs')
 
-// Download media message
+
 const downloadMediaMessage = async (m, filename) => {
-    try {
-        if (m.type === 'viewOnceMessage') {
-            m.type = m.msg.type;
-        }
-        
-        if (!m.msg) {
-            throw new Error('No message content');
-        }
-        
-        let buffer = Buffer.from([]);
-        let filePath = '';
-        
-        if (m.type === 'imageMessage') {
-            const stream = await downloadContentFromMessage(m.msg, 'image');
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
-            }
-            filePath = filename ? filename + '.jpg' : 'image_' + Date.now() + '.jpg';
-            
-        } else if (m.type === 'videoMessage') {
-            const stream = await downloadContentFromMessage(m.msg, 'video');
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
-            }
-            filePath = filename ? filename + '.mp4' : 'video_' + Date.now() + '.mp4';
-            
-        } else if (m.type === 'audioMessage') {
-            const stream = await downloadContentFromMessage(m.msg, 'audio');
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
-            }
-            filePath = filename ? filename + '.mp3' : 'audio_' + Date.now() + '.mp3';
-            
-        } else if (m.type === 'stickerMessage') {
-            const stream = await downloadContentFromMessage(m.msg, 'sticker');
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
-            }
-            filePath = filename ? filename + '.webp' : 'sticker_' + Date.now() + '.webp';
-            
-        } else if (m.type === 'documentMessage') {
-            const stream = await downloadContentFromMessage(m.msg, 'document');
-            for await (const chunk of stream) {
-                buffer = Buffer.concat([buffer, chunk]);
-            }
-            const ext = m.msg.fileName ? 
-                m.msg.fileName.split('.').pop().toLowerCase() : 
-                'bin';
-            filePath = filename ? filename + '.' + ext : 'document_' + Date.now() + '.' + ext;
-            
-        } else {
-            throw new Error('Unsupported message type: ' + m.type);
-        }
-        
-        // Ensure media directory exists
-        const mediaDir = path.join(process.cwd(), 'media');
-        if (!fs.existsSync(mediaDir)) {
-            fs.mkdirSync(mediaDir, { recursive: true });
-        }
-        
-        // Save file
-        const fullPath = path.join(mediaDir, filePath);
-        fs.writeFileSync(fullPath, buffer);
-        
-        console.log(`✅ Downloaded media: ${fullPath}`);
-        return fs.readFileSync(fullPath);
-        
-    } catch (error) {
-        console.error('❌ Download media error:', error);
-        throw error;
+    if (m.type === 'viewOnceMessage') {
+        m.type = m.msg.type
     }
-};
+    if (m.type === 'imageMessage') {
+        var nameJpg = filename ? filename + '.jpg' : 'undefined.jpg'
+        const stream = await downloadContentFromMessage(m.msg, 'image')
+        let buffer = Buffer.from([])
+        for await (const chunk of stream) {
+            buffer = Buffer.concat([buffer, chunk])
+        }
+        fs.writeFileSync(nameJpg, buffer)
+        return fs.readFileSync(nameJpg)
+    } else if (m.type === 'videoMessage') {
+        var nameMp4 = filename ? filename + '.mp4' : 'undefined.mp4'
+        const stream = await downloadContentFromMessage(m.msg, 'video')
+        let buffer = Buffer.from([])
+        for await (const chunk of stream) {
+            buffer = Buffer.concat([buffer, chunk])
+        }
+        fs.writeFileSync(nameMp4, buffer)
+        return fs.readFileSync(nameMp4)
+    } else if (m.type === 'audioMessage') {
+        var nameMp3 = filename ? filename + '.mp3' : 'undefined.mp3'
+        const stream = await downloadContentFromMessage(m.msg, 'audio')
+        let buffer = Buffer.from([])
+        for await (const chunk of stream) {
+            buffer = Buffer.concat([buffer, chunk])
+        }
+        fs.writeFileSync(nameMp3, buffer)
+        return fs.readFileSync(nameMp3)
+    } else if (m.type === 'stickerMessage') {
+        var nameWebp = filename ? filename + '.webp' : 'undefined.webp'
+        const stream = await downloadContentFromMessage(m.msg, 'sticker')
+        let buffer = Buffer.from([])
+        for await (const chunk of stream) {
+            buffer = Buffer.concat([buffer, chunk])
+        }
+        fs.writeFileSync(nameWebp, buffer)
+        return fs.readFileSync(nameWebp)
+    } else if (m.type === 'documentMessage') {
+        var ext = m.msg.fileName.split('.')[1].toLowerCase().replace('jpeg', 'jpg').replace('png', 'jpg').replace('m4a', 'mp3')
+        var nameDoc = filename ? filename + '.' + ext : 'undefined.' + ext
+        const stream = await downloadContentFromMessage(m.msg, 'document')
+        let buffer = Buffer.from([])
+        for await (const chunk of stream) {
+            buffer = Buffer.concat([buffer, chunk])
+        }
+        fs.writeFileSync(nameDoc, buffer)
+        return fs.readFileSync(nameDoc)
+    }
+}
 
-// Process and enhance message
 const sms = (conn, m) => {
-    if (!m) return m;
-    
-    // Extract basic message info
     if (m.key) {
-        m.id = m.key.id;
-        m.chat = m.key.remoteJid;
-        m.fromMe = m.key.fromMe;
-        m.isGroup = m.chat.endsWith('@g.us');
-        m.sender = m.fromMe ? 
-            (conn.user.id.split(':')[0] + '@s.whatsapp.net') : 
-            (m.isGroup ? m.key.participant : m.chat);
+        m.id = m.key.id
+        m.chat = m.key.remoteJid
+        m.fromMe = m.key.fromMe
+        m.isGroup = m.chat.endsWith('@g.us')
+        m.sender = m.fromMe ? conn.user.id.split(':')[0] + '@s.whatsapp.net' : m.isGroup ? m.key.participant : m.key.remoteJid
     }
-    
-    // Process message content
     if (m.message) {
-        m.type = getContentType(m.message);
-        
-        // Handle view once messages
-        if (m.type === 'viewOnceMessage') {
-            m.msg = m.message[m.type].message[getContentType(m.message[m.type].message)];
-            if (m.msg) {
-                m.msg.type = getContentType(m.message[m.type].message);
-            }
-        } else {
-            m.msg = m.message[m.type];
-        }
-        
+        m.type = getContentType(m.message)
+        m.msg = (m.type === 'viewOnceMessage') ? m.message[m.type].message[getContentType(m.message[m.type].message)] : m.message[m.type]
         if (m.msg) {
-            // Extract mentions
-            const quotedMention = m.msg.contextInfo?.participant || '';
-            const tagMention = m.msg.contextInfo?.mentionedJid || [];
-            const mention = typeof tagMention === 'string' ? [tagMention] : tagMention;
-            if (quotedMention) mention.push(quotedMention);
-            m.mentionUser = mention.filter(x => x);
-            
-            // Extract text body
-            m.body = (m.type === 'conversation') ? m.msg :
-                    (m.type === 'extendedTextMessage') ? m.msg.text :
-                    (m.type === 'imageMessage' && m.msg.caption) ? m.msg.caption :
-                    (m.type === 'videoMessage' && m.msg.caption) ? m.msg.caption :
-                    (m.type === 'templateButtonReplyMessage') ? m.msg.selectedId :
-                    (m.type === 'buttonsResponseMessage') ? m.msg.selectedButtonId :
-                    '';
-            
-            // Handle quoted message
-            m.quoted = m.msg.contextInfo?.quotedMessage || null;
-            
+            if (m.type === 'viewOnceMessage') {
+                m.msg.type = getContentType(m.message[m.type].message)
+            }
+            var quotedMention = m.msg.contextInfo != null ? m.msg.contextInfo.participant : ''
+            var tagMention = m.msg.contextInfo != null ? m.msg.contextInfo.mentionedJid : []
+            var mention = typeof(tagMention) == 'string' ? [tagMention] : tagMention
+            mention != undefined ? mention.push(quotedMention) : []
+            m.mentionUser = mention != undefined ? mention.filter(x => x) : []
+            m.body = (m.type === 'conversation') ? m.msg : (m.type === 'extendedTextMessage') ? m.msg.text : (m.type == 'imageMessage') && m.msg.caption ? m.msg.caption : (m.type == 'videoMessage') && m.msg.caption ? m.msg.caption : (m.type == 'templateButtonReplyMessage') && m.msg.selectedId ? m.msg.selectedId : (m.type == 'buttonsResponseMessage') && m.msg.selectedButtonId ? m.msg.selectedButtonId : ''
+            m.quoted = m.msg.contextInfo != undefined ? m.msg.contextInfo.quotedMessage : null
             if (m.quoted) {
-                m.quoted.type = getContentType(m.quoted);
-                m.quoted.id = m.msg.contextInfo.stanzaId;
-                m.quoted.sender = m.msg.contextInfo.participant;
-                m.quoted.fromMe = m.quoted.sender.split('@')[0].includes(conn.user.id.split(':')[0]);
-                
-                // Get quoted message content
+                m.quoted.type = getContentType(m.quoted)
+                m.quoted.id = m.msg.contextInfo.stanzaId
+                m.quoted.sender = m.msg.contextInfo.participant
+                m.quoted.fromMe = m.quoted.sender.split('@')[0].includes(conn.user.id.split(':')[0])
+                m.quoted.msg = (m.quoted.type === 'viewOnceMessage') ? m.quoted[m.quoted.type].message[getContentType(m.quoted[m.quoted.type].message)] : m.quoted[m.quoted.type]
                 if (m.quoted.type === 'viewOnceMessage') {
-                    m.quoted.msg = m.quoted[m.quoted.type].message[getContentType(m.quoted[m.quoted.type].message)];
-                    if (m.quoted.msg) {
-                        m.quoted.msg.type = getContentType(m.quoted[m.quoted.type].message);
-                    }
-                } else {
-                    m.quoted.msg = m.quoted[m.quoted.type];
+                    m.quoted.msg.type = getContentType(m.quoted[m.quoted.type].message)
                 }
-                
-                // Extract quoted mentions
-                const quoted_quotedMention = m.quoted.msg?.contextInfo?.participant || '';
-                const quoted_tagMention = m.quoted.msg?.contextInfo?.mentionedJid || [];
-                const quoted_mention = typeof quoted_tagMention === 'string' ? [quoted_tagMention] : quoted_tagMention;
-                if (quoted_quotedMention) quoted_mention.push(quoted_quotedMention);
-                m.quoted.mentionUser = quoted_mention.filter(x => x);
-                
-                // Create fake object for operations
+                var quoted_quotedMention = m.quoted.msg.contextInfo != null ? m.quoted.msg.contextInfo.participant : ''
+                var quoted_tagMention = m.quoted.msg.contextInfo != null ? m.quoted.msg.contextInfo.mentionedJid : []
+                var quoted_mention = typeof(quoted_tagMention) == 'string' ? [quoted_tagMention] : quoted_tagMention
+                quoted_mention != undefined ? quoted_mention.push(quoted_quotedMention) : []
+                m.quoted.mentionUser = quoted_mention != undefined ? quoted_mention.filter(x => x) : []
                 m.quoted.fakeObj = proto.WebMessageInfo.fromObject({
                     key: {
                         remoteJid: m.chat,
@@ -162,186 +103,117 @@ const sms = (conn, m) => {
                         participant: m.quoted.sender
                     },
                     message: m.quoted
-                });
-                
-                // Add download method to quoted
-                m.quoted.download = (filename) => downloadMediaMessage(m.quoted, filename);
-                
-                // Add delete method
-                m.quoted.delete = async () => {
-                    try {
-                        await conn.sendMessage(m.chat, {
-                            delete: m.quoted.fakeObj.key
-                        });
-                    } catch (error) {
-                        console.error('Delete error:', error);
+                })
+                m.quoted.download = (filename) => downloadMediaMessage(m.quoted, filename)
+                m.quoted.delete = () => conn.sendMessage(m.chat, {
+                    delete: m.quoted.fakeObj.key
+                })
+                m.quoted.react = (emoji) => conn.sendMessage(m.chat, {
+                    react: {
+                        text: emoji,
+                        key: m.quoted.fakeObj.key
                     }
-                };
-                
-                // Add react method
-                m.quoted.react = async (emoji) => {
-                    try {
-                        await conn.sendMessage(m.chat, {
-                            react: {
-                                text: emoji,
-                                key: m.quoted.fakeObj.key
-                            }
-                        });
-                    } catch (error) {
-                        console.error('React error:', error);
-                    }
-                };
+                })
             }
-            
-            // Add download method to main message
-            m.download = (filename) => downloadMediaMessage(m, filename);
         }
+        m.download = (filename) => downloadMediaMessage(m, filename)
     }
-    
-    // Reply methods
-    m.reply = async (text, id = m.chat, options = {}) => {
-        try {
-            return await conn.sendMessage(id, {
-                text: String(text),
-                contextInfo: {
-                    mentionedJid: options.mentions || []
-                }
-            }, {
-                quoted: m
-            });
-        } catch (error) {
-            console.error('Reply error:', error);
-            throw error;
+
+    m.reply = (teks, id = m.chat, option = {
+        mentions: [m.sender]
+    }) => conn.sendMessage(id, {
+        text: teks,
+        contextInfo: {
+            mentionedJid: option.mentions
         }
-    };
-    
-    m.replyS = async (sticker, id = m.chat, options = {}) => {
-        try {
-            return await conn.sendMessage(id, {
-                sticker: Buffer.isBuffer(sticker) ? sticker : { url: sticker },
-                contextInfo: {
-                    mentionedJid: options.mentions || []
-                }
-            }, {
-                quoted: m
-            });
-        } catch (error) {
-            console.error('Sticker reply error:', error);
-            throw error;
+    }, {
+        quoted: m
+    })
+    m.replyS = (stik, id = m.chat, option = {
+        mentions: [m.sender]
+    }) => conn.sendMessage(id, {
+        sticker: stik,
+        contextInfo: {
+            mentionedJid: option.mentions
         }
-    };
-    
-    m.replyImg = async (image, caption = '', id = m.chat, options = {}) => {
-        try {
-            return await conn.sendMessage(id, {
-                image: Buffer.isBuffer(image) ? image : { url: image },
-                caption: String(caption),
-                contextInfo: {
-                    mentionedJid: options.mentions || []
-                }
-            }, {
-                quoted: m
-            });
-        } catch (error) {
-            console.error('Image reply error:', error);
-            throw error;
+    }, {
+        quoted: m
+    })
+    m.replyImg = (img, teks, id = m.chat, option = {
+        mentions: [m.sender]
+    }) => conn.sendMessage(id, {
+        image: img,
+        caption: teks,
+        contextInfo: {
+            mentionedJid: option.mentions
         }
-    };
-    
-    m.replyVid = async (video, caption = '', id = m.chat, options = {}) => {
-        try {
-            return await conn.sendMessage(id, {
-                video: Buffer.isBuffer(video) ? video : { url: video },
-                caption: String(caption),
-                gifPlayback: options.gif || false,
-                contextInfo: {
-                    mentionedJid: options.mentions || []
-                }
-            }, {
-                quoted: m
-            });
-        } catch (error) {
-            console.error('Video reply error:', error);
-            throw error;
+    }, {
+        quoted: m
+    })
+    m.replyVid = (vid, teks, id = m.chat, option = {
+        mentions: [m.sender],
+        gif: false
+    }) => conn.sendMessage(id, {
+        video: vid,
+        caption: teks,
+        gifPlayback: option.gif,
+        contextInfo: {
+            mentionedJid: option.mentions
         }
-    };
-    
-    m.replyAud = async (audio, id = m.chat, options = {}) => {
-        try {
-            return await conn.sendMessage(id, {
-                audio: Buffer.isBuffer(audio) ? audio : { url: audio },
-                ptt: options.ptt || false,
-                mimetype: 'audio/mpeg',
-                contextInfo: {
-                    mentionedJid: options.mentions || []
-                }
-            }, {
-                quoted: m
-            });
-        } catch (error) {
-            console.error('Audio reply error:', error);
-            throw error;
+    }, {
+        quoted: m
+    })
+    m.replyAud = (aud, id = m.chat, option = {
+        mentions: [m.sender],
+        ptt: false
+    }) => conn.sendMessage(id, {
+        audio: aud,
+        ptt: option.ptt,
+        mimetype: 'audio/mpeg',
+        contextInfo: {
+            mentionedJid: option.mentions
         }
-    };
-    
-    m.replyDoc = async (document, id = m.chat, options = {}) => {
-        try {
-            return await conn.sendMessage(id, {
-                document: Buffer.isBuffer(document) ? document : { url: document },
-                mimetype: options.mimetype || 'application/octet-stream',
-                fileName: options.filename || 'document',
-                contextInfo: {
-                    mentionedJid: options.mentions || []
-                }
-            }, {
-                quoted: m
-            });
-        } catch (error) {
-            console.error('Document reply error:', error);
-            throw error;
+    }, {
+        quoted: m
+    })
+    m.replyDoc = (doc, id = m.chat, option = {
+        mentions: [m.sender],
+        filename: 'undefined.pdf',
+        mimetype: 'application/pdf'
+    }) => conn.sendMessage(id, {
+        document: doc,
+        mimetype: option.mimetype,
+        fileName: option.filename,
+        contextInfo: {
+            mentionedJid: option.mentions
         }
-    };
-    
-    m.replyContact = async (name, number, id = m.chat) => {
-        try {
-            const vcard = `BEGIN:VCARD
-VERSION:3.0
-FN:${name}
-TEL;type=CELL;type=VOICE;waid=${number.replace('+', '')}:${number}
-END:VCARD`;
-            
-            return await conn.sendMessage(id, {
-                contacts: {
-                    displayName: name,
-                    contacts: [{ vcard }]
-                }
-            }, {
-                quoted: m
-            });
-        } catch (error) {
-            console.error('Contact reply error:', error);
-            throw error;
+    }, {
+        quoted: m
+    })
+    m.replyContact = (name, info, number) => {
+        var vcard = 'BEGIN:VCARD\n' + 'VERSION:3.0\n' + 'FN:' + name + '\n' + 'ORG:' + info + ';\n' + 'TEL;type=CELL;type=VOICE;waid=' + number + ':+' + number + '\n' + 'END:VCARD'
+        conn.sendMessage(m.chat, {
+            contacts: {
+                displayName: name,
+                contacts: [{
+                    vcard
+                }]
+            }
+        }, {
+            quoted: m
+        })
+    }
+    m.react = (emoji) => conn.sendMessage(m.chat, {
+        react: {
+            text: emoji,
+            key: m.key
         }
-    };
-    
-    m.react = async (emoji) => {
-        try {
-            return await conn.sendMessage(m.chat, {
-                react: {
-                    text: emoji,
-                    key: m.key
-                }
-            });
-        } catch (error) {
-            console.error('React error:', error);
-            throw error;
-        }
-    };
-    
-    return m;
-};
+    })
+
+    return m
+}
 
 module.exports = {
     sms,
     downloadMediaMessage
-};
+}
