@@ -1,40 +1,24 @@
 {
-  "name": "dtz-nova-x-md",
+  "name": "dtz-nova-bot",
   "version": "1.0.0",
   "description": "DTZ NOVA X MD WhatsApp Bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.4.0",
     "express": "^4.18.2",
     "fs-extra": "^11.2.0",
-    "axios": "^1.2.5"
-    "pino": "^8.17.0",
-    "jimp": "^1.6.0",
-    "@octokit/rest": "^20.0.2",
-    "cheerio": "^1.0.0",
-    "yt-search": "^2.10.0",
-    "node-fetch": "^3.3.0",
-    "sharp": "^0.34.1",
-    "moment-timezone": "^0.6.0",
-    "crypto": "^1.0.1",
-    "child_process": "^1.0.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "axios": "^1.6.7",
+    "pino": "^8.15.0",
+    "qrcode-terminal": "^0.12.0",
+    "moment-timezone": "^0.5.43"
   },
   "engines": {
-    "node": ">=18.x"
+    "node": ">=18.0.0"
   },
-  "keywords": [
-    "whatsapp",
-    "bot",
-    "multi-device",
-    "baileys",
-    "dtz-nova"
-  ],
   "author": "DTZ DULA",
   "license": "MIT"
 }
