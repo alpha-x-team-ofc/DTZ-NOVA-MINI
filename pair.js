@@ -9,7 +9,9 @@ const moment = require('moment-timezone');
 const Jimp = require('jimp');
 const crypto = require('crypto');
 const axios = require('axios');
-const { sms, downloadMediaMessage } = require("./msg"); // Make sure this file exists
+const { sms, downloadMediaMessage } = require("./msg");
+
+// Use standard baileys package
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -23,7 +25,7 @@ const {
     prepareWAMessageMedia,
     generateWAMessageFromContent,
     S_WHATSAPP_NET
-} = require('@whiskeysockets/baileys'); // Fixed: Changed from 'baileys' to '@whiskeysockets/baileys'
+} = require('baileys'); // Fixed: Changed from 'baileys' to '@whiskeysockets/baileys'
 
 const FIREBASE_URL = 'https://minibotproject2-default-rtdb.asia-southeast1.firebasedatabase.app';
 
