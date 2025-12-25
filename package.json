@@ -1,7 +1,9 @@
+[file name]: package.json
+[file content begin]
 {
-  "name": "dtz-nova-x-md",
+  "name": "DTZ-NOVA-X-MD",
   "version": "1.0.0",
-  "description": "DTZ NOVA X MD WhatsApp Bot by Dulina Nethmiura",
+  "description": "DTZ NOVA X MD MINI WhatsApp Bot with Multi-Number Support",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,21 +11,35 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "baileys": "npm:baileys-dtz",
+    "@whiskeysockets/baileys": "^6.4.0",
     "express": "^4.18.2",
     "fs-extra": "^11.2.0",
-    "axios": "^1.6.0",
-    "body-parser": "^1.20.2",
     "pino": "^8.17.0",
-    "cheerio": "^1.0.0-rc.12",
-    "moment-timezone": "^0.5.43",
-    "jimp": "^0.16.0",
+    "jimp": "^0.16.1",
+    "@octokit/rest": "^20.0.2",
+    "cheerio": "^1.0.0",
+    "yt-search": "^2.10.0",
+    "node-fetch": "^3.3.0",
+    "sharp": "^0.34.1",
+    "axios": "^1.2.5",
+    "moment-timezone": "^0.6.0",
     "crypto": "^1.0.1",
-    "yt-search": "^2.12.1",
-    "node-fetch": "^2.6.1",
-    "dotenv": "^16.4.5"
+    "child_process": "^1.0.2"
   },
-  "keywords": ["whatsapp-bot", "dtz-nova-x-md", "dulina-nethmiura"],
-  "author": "Dulina Nethmiura",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "multi-device",
+    "baileys",
+    "dtz-nova"
+  ],
+  "author": "DTZ DULA",
   "license": "MIT"
 }
+[file content end]
