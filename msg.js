@@ -1,12 +1,9 @@
-[file name]: msg.js
-[file content begin]
 const {
     proto,
     downloadContentFromMessage,
     getContentType
 } = require('@whiskeysockets/baileys')
 const fs = require('fs')
-const { default: makeWASocket } = require('@whiskeysockets/baileys')
 
 const downloadMediaMessage = async (m, filename) => {
     if (m.type === 'viewOnceMessage') {
@@ -328,4 +325,3 @@ module.exports = {
     sms,
     downloadMediaMessage
 }
-[file content end]
