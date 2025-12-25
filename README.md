@@ -16,7 +16,7 @@
 <!-- Banner Image -->
 <p align="center">
   <a href="https://i.imghippo.com/files/GFuA9132q.jpg">
-    <img src="https://i.imghippo.com/files/GFuA9132q.jpg" width="100%" height="auto">
+    <img src="https://files.catbox.moe/fpyw9m.png" width="100%" height="auto">
   </a>
 </p>
 
@@ -28,7 +28,7 @@
 </p>
 
 
-*_🪻LOKU RIKO MINI BOT TEXT MASSAGE🪻_*
+*_🪻DTZ NOVA X MD MINI BOT TEXT MASSAGE🪻_*
 
 
 
