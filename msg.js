@@ -1,15 +1,16 @@
-const {
-    proto,
-    downloadContentFromMessage,
-    getContentType
-} = require('@whiskeysockets/baileys')
-const fs = require('fs')
+const { proto, downloadContentFromMessage, getContentType } = require('@whiskeysockets/baileys');
+const fs = require('fs');
 
 const downloadMediaMessage = async (m, filename) => {
-    if (m.type === 'viewOnceMessage') {
-        m.type = m.msg.type
-    }
-    
+    // Function code here (from previous message)
+};
+
+const sms = (conn, m) => {
+    // Function code here (from previous message)
+};
+
+module.exports = { sms, downloadMediaMessage };
+
     let fileType = '';
     let fileExtension = '';
     
