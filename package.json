@@ -1,7 +1,5 @@
-[file name]: package.json
-[file content begin]
 {
-  "name": "DTZ-NOVA-X-MD",
+  "name": "dtz-nova-x-md",
   "version": "1.0.0",
   "description": "DTZ NOVA X MD MINI WhatsApp Bot with Multi-Number Support",
   "main": "index.js",
@@ -42,4 +40,3 @@
   "author": "DTZ DULA",
   "license": "MIT"
 }
-[file content end]
